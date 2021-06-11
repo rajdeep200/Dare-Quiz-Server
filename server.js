@@ -9,6 +9,9 @@ app.use(express.json())
 
 connectDB()
 
+app.get("/", (req,res) => {
+    res.send("Welcome")
+})
 app.use("/users", userRoutes)
 app.use("/questions", questionRoutes)
 app.use("/answers", ansRoutes)

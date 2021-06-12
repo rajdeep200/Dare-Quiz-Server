@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const Answer = require("../models/answerModel")
 const generateToken = require("../utils/generateToken");
 
 const createUser = asyncHandler(async (req, res) => {
@@ -46,4 +47,15 @@ const loginUser = asyncHandler(async (req, res) => {
   
 });
 
-module.exports = { createUser, loginUser };
+const deleteUserAccount = asyncHandler (async (req,res) => {
+  const user = await User.findOne({ userID: req.params.id });
+  if(user){
+    const deletedUser = await User.findOneAndDelete({ userID: user.userID })
+    const userAnswers = await Answer.deleteMany({ user: user._id })
+    res.json({message: "Your account deleted successfully"})
+  }else{
+    res.status(401).json({message:"Failed to delete"})
+  }
+})
+
+module.exports = { createUser, loginUser, deleteUserAccount };
